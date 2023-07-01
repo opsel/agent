@@ -1,0 +1,10 @@
+server:
+  schema: https
+  uri: opsel.shyamin.com
+
+agent:
+  interval: 1
+
+  modules:
+    - cpuinfo
+    - meminfo
