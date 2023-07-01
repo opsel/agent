@@ -10,6 +10,7 @@ import (
 type (
 	Config struct {
 		Agent struct {
+			ID       string   `yaml:"id"`
 			Interval uint64   `yaml:"interval"`
 			Modules  []string `yaml:"modules"`
 		} `yaml:"agent"`

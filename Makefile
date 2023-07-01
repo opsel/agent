@@ -1,4 +1,4 @@
 default: run
 
 run:
-	@go run config.go agent.go
+	@go run agent.go
