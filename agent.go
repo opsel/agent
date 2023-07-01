@@ -50,7 +50,9 @@ func main() {
 	}
 
 	var config Config
-	yaml.Unmarshal(payload, &config)
+	if err := yaml.Unmarshal(payload, &config); err != nil {
+		log.Fatalf("[ERROR] %s", err.Error())
+	}
 
 	/**
 	* Loop each module to get the relevent information
