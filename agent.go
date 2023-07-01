@@ -1,7 +1,7 @@
 package main
 
 import (
-	"agent/plugins"
+	provider "agent/providers"
 	"io"
 	"log"
 	"os"
@@ -24,8 +24,8 @@ type Provider interface {
 * loading.
  */
 var ProviderFactory map[string]Provider = map[string]Provider{
-	"cpu_info": &plugins.CPUInfo{},
-	"mem_info": &plugins.CPUInfo{},
+	"cpu_info": &provider.CPUInfo{},
+	"mem_info": &provider.CPUInfo{},
 }
 
 func main() {
@@ -84,8 +84,8 @@ func main() {
 		* so each and every provider will do the job without
 		* render blocking
 		 */
-		for _, name := range config.Agent.Modules {
-			var provider Provider = ProviderFactory[name]
+		for _, module := range config.Agent.Modules {
+			var provider Provider = ProviderFactory[module]
 			go provider.Worker(config.Server.Schema, config.Server.URI)
 		}
 
