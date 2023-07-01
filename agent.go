@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"agent/plugins"
 	"io"
 	"log"
 	"os"
@@ -9,6 +9,24 @@ import (
 
 	"gopkg.in/yaml.v3"
 )
+
+/**
+* Define the interface for the Provider to later use
+* in seperate providers to implement
+ */
+type Provider interface {
+	Worker(schema string, uri string)
+}
+
+/**
+* Define list of available providers into the following
+* factory var to utilize later in dynamic provider
+* loading.
+ */
+var ProviderFactory map[string]Provider = map[string]Provider{
+	"cpu_info": &plugins.CPUInfo{},
+	"mem_info": &plugins.CPUInfo{},
+}
 
 func main() {
 
@@ -60,9 +78,16 @@ func main() {
 	* in the opsel.yaml configuration
 	 */
 	for {
-		fmt.Println("[OPSEL] Running")
 
-		fmt.Println(config.Agent.Modules)
+		/**
+		* Dispatch each provider in a different go routine
+		* so each and every provider will do the job without
+		* render blocking
+		 */
+		for _, name := range config.Agent.Modules {
+			var provider Provider = ProviderFactory[name]
+			go provider.Worker(config.Server.Schema, config.Server.URI)
+		}
 
 		/**
 		* Sleep the loop according to the time interval

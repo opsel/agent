@@ -3,8 +3,8 @@ server:
   uri: opsel.shyamin.com
 
 agent:
-  interval: 1
+  interval: 10
 
   modules:
-    - cpuinfo
-    - meminfo
+    - cpu_info
+    - mem_info
