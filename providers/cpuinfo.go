@@ -1,7 +1,8 @@
 package provider
 
 import (
-	"fmt"
+	"agent/config"
+	"log"
 )
 
 type CPUInfo struct{}
@@ -14,6 +15,6 @@ func (provider CPUInfo) isDue() {
 
 }
 
-func (provider CPUInfo) Worker(schema string, uri string) {
-	fmt.Println("CPUInfo::worker()")
+func (provider CPUInfo) Worker(cfg config.Config) {
+	log.Printf("[INFO] MODULE: cpuinfo")
 }
