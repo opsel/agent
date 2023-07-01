@@ -3,6 +3,7 @@ package main
 import (
 	"agent/config"
 	provider "agent/providers"
+	"fmt"
 	"log"
 	"time"
 )
@@ -31,6 +32,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("[ERROR] %s", err.Error())
 	}
+
+	/** [TODO]
+	* Check if the Agent ID is configured or not before
+	* starting the modules otherwise upstream will get
+	* lot of unwanted data feeds
+	 */
+	fmt.Println(cfg.Agent.ID)
 
 	/**
 	* Loop each module to get the relevent information
