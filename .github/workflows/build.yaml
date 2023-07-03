@@ -19,4 +19,4 @@ jobs:
         run: make build
 
       - name: Debug
-        run: ldd opsel
+        run: ls -all opsel
