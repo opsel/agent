@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - "dev"
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Initiate GoLang
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'
+
+      - name: Build
+        run: make build
