@@ -19,4 +19,4 @@ jobs:
         run: make build
 
       - name: Debug
-        run: ls -all opsel
+        run: sha256sum opsel
