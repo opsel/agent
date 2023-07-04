@@ -3,18 +3,28 @@ package utils
 import (
 	"agent/config"
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 )
 
-func Feeder(cfg config.Config, Endpoint string, Payload []byte) error {
+func Feeder(cfg config.Config, Endpoint string, Data interface{}) error {
+
+	/**
+	* JSON Marshal payload before sending it to the upstream
+	* and then pass the byte array to net/http post request
+	 */
+	payload, err := json.Marshal(Data)
+	if err != nil {
+		return err
+	}
 
 	/**
 	* Initiate new HTTP post request using net/http to feed
 	* data into the upstream gather endpoint
 	 */
-	Request, err := http.NewRequest("POST", fmt.Sprintf("%s://%s/gather%s", cfg.Server.Schema, cfg.Server.URI, Endpoint), bytes.NewBuffer(Payload))
+	Request, err := http.NewRequest("POST", fmt.Sprintf("%s://%s/gather%s", cfg.Server.Schema, cfg.Server.URI, Endpoint), bytes.NewBuffer(payload))
 	if err != nil {
 		return err
 	}
