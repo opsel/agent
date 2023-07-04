@@ -3,7 +3,6 @@ package main
 import (
 	"agent/config"
 	provider "agent/providers"
-	"fmt"
 	"log"
 	"time"
 )
@@ -23,7 +22,7 @@ type Provider interface {
  */
 var ProviderFactory map[string]Provider = map[string]Provider{
 	"cpu_info": &provider.CPUInfo{},
-	"mem_info": &provider.CPUInfo{},
+	"mem_info": &provider.MEMInfo{},
 }
 
 func main() {
@@ -38,7 +37,6 @@ func main() {
 	* starting the modules otherwise upstream will get
 	* lot of unwanted data feeds
 	 */
-	fmt.Println(cfg.Agent.ID)
 
 	/**
 	* Loop each module to get the relevent information
