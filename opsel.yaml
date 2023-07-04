@@ -1,11 +1,10 @@
 server:
-  schema: https
-  uri: opsel.shyamin.com
+  schema: http
+  uri: localhost:8888
 
 agent:
   id: 5af4e600-4ec8-4261-b678-78370ac45a28
-  interval: 10
+  interval: 2
 
   modules:
     - cpu_info
-    - mem_info
