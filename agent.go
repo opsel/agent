@@ -3,6 +3,8 @@ package main
 import (
 	"agent/config"
 	provider "agent/providers"
+	"agent/utils"
+	"database/sql"
 	"log"
 	"time"
 )
@@ -12,7 +14,7 @@ import (
 * in seperate providers to implement
  */
 type Provider interface {
-	Worker(cfg config.Config)
+	Worker(cfg config.Config, db *sql.DB)
 }
 
 /**
@@ -21,8 +23,9 @@ type Provider interface {
 * loading.
  */
 var ProviderFactory map[string]Provider = map[string]Provider{
-	"cpu_info": &provider.CPUInfo{},
-	"mem_info": &provider.MEMInfo{},
+	"system":    &provider.System{},
+	"processor": &provider.Processor{},
+	"memory":    &provider.Memory{},
 }
 
 func main() {
@@ -31,6 +34,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("[ERROR] %s", err.Error())
 	}
+
+	/**
+	* Implement a SQLite database to store runtime related
+	* information about the agent.
+	 */
+	db := utils.DB()
 
 	/** [TODO]
 	* Check if the Agent ID is configured or not before
@@ -46,13 +55,22 @@ func main() {
 	for {
 
 		/**
+		* Dispatch required modules without adding them to the
+		* extra module set. These modules will always required
+		* for the functionality.
+		*     - System
+		 */
+		var SystemProvider Provider = ProviderFactory["system"]
+		go SystemProvider.Worker(cfg, db)
+
+		/**
 		* Dispatch each provider in a different go routine
 		* so each and every provider will do the job without
 		* render blocking
 		 */
 		for _, module := range cfg.Agent.Modules {
 			var provider Provider = ProviderFactory[module]
-			go provider.Worker(cfg)
+			go provider.Worker(cfg, db)
 		}
 
 		/**
