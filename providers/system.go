@@ -25,7 +25,7 @@ func (provider System) Worker(cfg config.Config, db *sql.DB) {
 	* and then invoke the Gather function to gather
 	* relevent informaiton
 	 */
-	if isDue := utils.IsDue("system", db); isDue == true {
+	if isDue := utils.IsDue(db, "system", 10800); isDue == true {
 		log.Printf("[INFO] MODULE: system is due for execution")
 	} else {
 		log.Println("[INFO] MODULE: system is not due for execution")
