@@ -56,24 +56,26 @@ func (provider Processor) Gather() (Processor, error) {
 
 // WORKER
 func (provider Processor) Worker(cfg config.Config, db *sql.DB) {
-	log.Printf("[INFO] MODULE: processor")
-
-	processors, err := provider.Gather()
-	if err != nil {
-		log.Printf("[ERROR] %s", err)
-		return
-	}
 
 	/**
 	* Check if the module is due for new submission
 	* and then invoke the Gather function to gather
 	* relevent informaiton
 	 */
+	if isDue := utils.IsDue(db, "system", 10800); isDue == true {
+		log.Printf("[INFO] MODULE: processor")
 
-	// Feeder
-	if err := utils.Feeder(cfg, "/processor", processors); err != nil {
-		log.Printf("[ERROR] %s", err)
-		return
+		processors, err := provider.Gather()
+		if err != nil {
+			log.Printf("[ERROR] %s", err)
+			return
+		}
+
+		// Feeder
+		if err := utils.Feeder(cfg, "/processor", processors); err != nil {
+			log.Printf("[ERROR] %s", err)
+			return
+		}
 	}
 
 }
