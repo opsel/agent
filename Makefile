@@ -5,3 +5,6 @@ run:
 
 build:
 	@go build -o opsel -ldflags "-s -w" -trimpath agent.go
+
+test:
+	@go test
