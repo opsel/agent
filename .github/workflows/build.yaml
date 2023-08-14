@@ -21,5 +21,8 @@ jobs:
       - name: Build
         run: make build
 
-      - name: Debug
-        run: sha256sum opsel
+      - name: Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: opsel-agent
+          path: opsel
