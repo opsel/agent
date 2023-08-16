@@ -41,11 +41,14 @@ func main() {
 	 */
 	db := utils.DB()
 
-	/** [TODO]
+	/**
 	* Check if the Agent ID is configured or not before
 	* starting the modules otherwise upstream will get
 	* lot of unwanted data feeds
 	 */
+	if len(cfg.Agent.ID) != 36 {
+		log.Fatal("[ERROR]: Agent ID is invalid")
+	}
 
 	/**
 	* Loop each module to get the relevent information
