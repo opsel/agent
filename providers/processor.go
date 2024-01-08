@@ -62,7 +62,7 @@ func (provider Processor) Worker(cfg config.Config, db *sql.DB) {
 	* and then invoke the Gather function to gather
 	* relevent informaiton
 	 */
-	if isDue := utils.IsDue(db, "system", 10800); isDue == true {
+	if isDue := utils.IsDue(db, "system", 10800); isDue {
 		log.Printf("[INFO] MODULE: processor")
 
 		processors, err := provider.Gather()
