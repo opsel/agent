@@ -50,7 +50,7 @@ func (provider System) Worker(cfg config.Config, db *sql.DB) {
 	* and then invoke the Gather function to gather
 	* relevent informaiton
 	 */
-	if isDue := utils.IsDue(db, "system", 10); isDue {
+	if isDue := utils.IsDue(db, "system", 10800); isDue {
 		log.Printf("[INFO] MODULE: system")
 
 		system, err := provider.Gather()
