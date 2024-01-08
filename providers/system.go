@@ -5,17 +5,42 @@ import (
 	"agent/utils"
 	"database/sql"
 	"log"
+	"os"
 )
 
 type (
-	System struct{}
+	System struct {
+		Hostname string `json:"hostname"`
+	}
 )
 
 /**
 * Gather information required by the module and pass
 * them back to the main worker for submission
  */
-func (provider System) Gather() {}
+func (provider System) Gather() (System, error) {
+
+	/**
+	* Gather hostname of the system and include them in
+	* the system struct
+	 */
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Printf("[ERROR] %s", err)
+		return System{}, err
+	}
+
+	/**
+	* [TODO]
+	* Gather information about the network interfaces and
+	* include them in the system struct
+	 */
+
+	// RETURN
+	return System{
+		Hostname: hostname,
+	}, nil
+}
 
 // WORKER
 func (provider System) Worker(cfg config.Config, db *sql.DB) {
@@ -25,15 +50,19 @@ func (provider System) Worker(cfg config.Config, db *sql.DB) {
 	* and then invoke the Gather function to gather
 	* relevent informaiton
 	 */
-	if isDue := utils.IsDue(db, "system", 10800); isDue == true {
-		log.Printf("[INFO] MODULE: system is due for execution")
-	} else {
-		log.Println("[INFO] MODULE: system is not due for execution")
-	}
+	if isDue := utils.IsDue(db, "system", 10); isDue {
+		log.Printf("[INFO] MODULE: system")
 
-	/**
-	 * Feed all the information to the upstream opsel
-	 * server to process and store
-	 */
-	// http.Post(fmt.Sprintf("%s://%s/gather/", cfg.Server.Schema, cfg.Server.URI))
+		system, err := provider.Gather()
+		if err != nil {
+			log.Printf("[ERROR] %s", err)
+			return
+		}
+
+		// Feeder
+		if err := utils.Feeder(cfg, "/system", system); err != nil {
+			log.Printf("[ERROR] %s", err)
+			return
+		}
+	}
 }
