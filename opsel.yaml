@@ -6,5 +6,5 @@ agent:
   id: 5af4e600-4ec8-4261-b678-78370ac45a28
   interval: 2
 
-  modules:
-    - processor
+  # modules:
+  #   - processor
